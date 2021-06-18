@@ -5,8 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const host = '192.168.1.12'
-const port = 3000
+const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 3000;
 
 var serverLines = []
 

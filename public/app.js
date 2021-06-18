@@ -101,6 +101,12 @@ inputColor.addEventListener("change", () => {
 
 // ---------------------------------------------------------------------
 
+var undoButton = document.getElementById('undo-button');
+
+undoButton.addEventListener('click', undoLastLine);
+
+// ---------------------------------------------------------------------
+
 socket.on('drawLine', function(line) {
 	console.log('drawing another user line');
 	drawingLines.push(line);

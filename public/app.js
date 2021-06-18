@@ -3,17 +3,17 @@ var socket = io();
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-function getRandomColor() {
+var userColor = '#000000';
+var userID = function () {
 	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
+	var id = '';
+	
+  	for (var i = 0; i < 6; i++) {
+		id += letters[Math.floor(Math.random() * 16)];
 	}
-	return color;
-}
-
-
-var userColor = getRandomColor();
+	
+	return id;
+}();
 
 var drawingLines = [];
 
@@ -21,6 +21,8 @@ var drawPos = {
 	x: 0,
 	y: 0
 };
+
+// ---------------------------------------------------------------------
 
 canvas.addEventListener('mousedown', (e) => {
 	drawPos = {
@@ -35,15 +37,17 @@ canvas.addEventListener('mouseup', (e) => {
 		y: e.clientY - canvas.offsetTop
 	};
 
-	socket.emit('drawLine', { p1: drawPos, p2: pos, color: userColor });
+	socket.emit('drawLine', { p1: drawPos, p2: pos, color: userColor, id: userID });
 
-	drawingLines.push({ p1: drawPos, p2: pos, color: userColor });
+	drawingLines.push({ p1: drawPos, p2: pos, color: userColor, id: userID });
 	drawLines();
 });
 
 canvas.addEventListener('mousemove', (e) => {
 	drawLines();
 });
+
+// ---------------------------------------------------------------------
 
 function drawLines() {
 	ctx.fillStyle = '#FFFFFF';
@@ -63,7 +67,7 @@ function undoLastLine() {
 	var lastLineIndex = drawingLines.lenght - 1;
 	
 	drawingLines.forEach((line, index) => {
-		if (line.color == userColor) {
+		if (line.id == userID) {
 			lastLineIndex = index;
 		}
 	});
@@ -75,6 +79,8 @@ function undoLastLine() {
 	drawLines();
 }
 
+// ---------------------------------------------------------------------
+
 function KeyPress(e) {
 	var evtobj = window.event? event : e;
 	
@@ -84,6 +90,16 @@ function KeyPress(e) {
 }
 
 document.onkeydown = KeyPress;
+
+// ---------------------------------------------------------------------
+
+var inputColor = document.getElementById('input-color');
+
+inputColor.addEventListener("change", () => {
+	userColor = inputColor.value;
+});
+
+// ---------------------------------------------------------------------
 
 socket.on('drawLine', function(line) {
 	console.log('drawing another user line');

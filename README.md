@@ -5,7 +5,7 @@ Online drawing app
 ## Execute
 
 ```bash
-PORT=port;HOST=host node server.js
+PORT=port HOST=host node server.js
 ```
 
 ## TODO

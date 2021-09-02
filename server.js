@@ -33,6 +33,6 @@ io.on('connection', (socket) => {
 	});
 });
 
-server.listen(3000, host, () => {
+server.listen(port, host, () => {
 	console.log(`listening on ${host}:${port}`);
 });
